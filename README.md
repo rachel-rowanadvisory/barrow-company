@@ -1,6 +1,6 @@
 # barrow.company
 
-The holding page for Barrow Publishing Limited. Static HTML, no build step, no JavaScript, no third-party requests.
+The holding page for Barrow Publishing Limited. Static HTML, no build step, no third-party requests. The only script is a few inline lines that let the tab icon drop in and land on page load, skipped when the visitor prefers reduced motion.
 
 - `index.html` is the page. The wordmark is inline SVG.
 - `assets/fonts/` holds Bricolage Grotesque (SIL Open Font License, see `OFL.txt`).

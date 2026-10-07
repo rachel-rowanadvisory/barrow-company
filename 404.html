@@ -73,6 +73,34 @@ footer{margin-top:clamp(40px, 5%, 72px)}
   footer{margin-top:16.67%}
 }
 </style>
+<script>
+/* The loaded wheel, in the tab: the disc drops in, lands and compresses into the mark.
+   Runs once per load, only where motion is welcome, and ends on the shipped icon. */
+(function(){
+  try{
+    if(!matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+    var links=[].slice.call(document.querySelectorAll('link[rel="icon"]')); if(!links.length) return;
+    var orig=links.map(function(l){return l.href;});
+    var c=document.createElement('canvas'); c.width=c.height=64; var x=c.getContext('2d'); if(!x) return;
+    var R=28, CY=34.8, FLAT=5.6, FRAMES=22, DUR=760;        /* final: centre y 34.8, flat at 57.2 */
+    function draw(cy,flat){
+      x.clearRect(0,0,64,64); x.save(); x.beginPath(); x.rect(0,0,64,cy+R-flat); x.clip();
+      x.fillStyle='#111111'; x.beginPath(); x.arc(32,cy,R,0,Math.PI*2); x.fill(); x.restore();
+      var u=c.toDataURL('image/png'); links.forEach(function(l){l.href=u;});
+    }
+    var t0=null;
+    function step(t){
+      if(t0===null) t0=t; var p=Math.min(1,(t-t0)/DUR);
+      var cy,flat;
+      if(p<0.55){ var q=p/0.55; cy=CY-36*(1-q*q); flat=0; }               /* fall, accelerating */
+      else { var q2=(p-0.55)/0.45; var s=Math.sin(q2*Math.PI); cy=CY; flat=FLAT*Math.min(1,q2*1.6)+1.6*s*(1-q2); } /* land, compress, settle */
+      draw(cy,flat);
+      if(p<1) requestAnimationFrame(step); else links.forEach(function(l,i){l.href=orig[i];});
+    }
+    requestAnimationFrame(step);
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 
